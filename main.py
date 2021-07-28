@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import nltk
 from nltk.grammar import Nonterminal, Production, CFG
 import json
+import re
 
 def parse(s):
     tokens = nltk.word_tokenize(s)
@@ -19,6 +20,7 @@ def parse(s):
     for t in parser.parse(tokens):
         tree = t
     s = tree.pformat_latex_qtree().replace("bar", "'").replace("\n", " ")
+    s = re.sub(r"\[\.([A-Z]+)\s([a-zA-Z]+)\s\]", r"{\1 \\\\ \2}", s)
     print(s)
     return s
 
