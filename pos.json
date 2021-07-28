@@ -1,0 +1,21 @@
+{
+    "CC": "Conj",
+    "CD": "Adj",
+    "IN": "P",
+    "JJ": "Adj",
+    "JJR": "Adj",
+    "JJS": "Adj",
+    "MD": "T",
+    "NN": "N",
+    "NNS": "N",
+    "NNP": "N",
+    "NNPS": "N",
+    "VB": "V",
+    "VBD": "V",
+    "VBG": "V",
+    "VBN": "V",
+    "VBP": "V",
+    "VBZ": "V",
+    "PRP": "N",
+    "DT": "D"
+}

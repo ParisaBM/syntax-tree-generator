@@ -4,13 +4,23 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import nltk
+from nltk.grammar import Nonterminal, Production, CFG
+import json
 
 def parse(s):
     tokens = nltk.word_tokenize(s)
     tagged = nltk.pos_tag(tokens)
-    result = "\Tree[.CP " + " ".join(["{%s \\\\ %s}" % x[::-1] for x in tagged]) + " ]"
-    print(result)
-    return "1+1"
+    prod = nltk.data.load("file:english_grammar.cfg").productions()
+    with open("pos.json") as pos_file:
+        conversion = json.load(pos_file)
+    for token in tagged:
+        prod.append(Production(Nonterminal(conversion[token[1]]), [token[0]]))
+    parser = nltk.parse.EarleyChartParser(CFG(Nonterminal("CP"), prod))
+    for t in parser.parse(tokens):
+        tree = t
+    s = tree.pformat_latex_qtree().replace("bar", "'").replace("\n", " ")
+    print(s)
+    return s
 
 plt.rc('text', usetex=True)
 plt.rc('text.latex', preamble=r"\usepackage{qtree}")
@@ -22,7 +32,7 @@ matplotlib.use('TkAgg')
 win = Tk()
 
 # Set the size of the window
-win.geometry("700x350")
+win.geometry("1920x1080")
 
 # Set the title of the window
 win.title("LaTex Viewer")
@@ -33,7 +43,7 @@ def graph(text):
    tmptext = entry.get()
    # Clear any previous Syntax from the figure
    wx.clear()
-   wx.text(0.2, 0.6, parse(tmptext), fontsize = 20)
+   wx.text(0.2, 0.6, parse(tmptext), fontsize = 15)
    canvas.draw()
 # Create a Frame object
 frame = Frame(win)
@@ -48,7 +58,7 @@ label = Label(frame)
 label.pack()
 
 # Define the figure size and plot the figure
-fig = matplotlib.figure.Figure(figsize=(7, 4), dpi=100)
+fig = matplotlib.figure.Figure(figsize=(20, 14), dpi=100)
 wx = fig.add_subplot(111)
 canvas = FigureCanvasTkAgg(fig, master=label)
 canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
